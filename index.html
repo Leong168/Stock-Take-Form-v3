@@ -127,10 +127,16 @@
 
     // Load saved entries from localStorage
     const saved = localStorage.getItem("sku_entries");
-    if (saved) {
-      entries = JSON.parse(saved);
-      updateTable();
+if (saved) {
+  entries = JSON.parse(saved).map(entry => {
+    // Add missing date field to old entries
+    if (!entry.date) {
+      entry.date = new Date().toISOString().split('T')[0];
     }
+    return entry;
+  });
+  updateTable();
+}
 
     document.getElementById("login-screen").classList.add("d-none");
     document.getElementById("main-app").classList.remove("d-none");
