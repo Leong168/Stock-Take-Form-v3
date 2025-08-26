@@ -78,6 +78,7 @@
               <th>#</th>
               <th>SKU</th>
               <th>Quantity</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody id="entryTable"></tbody>
@@ -181,7 +182,16 @@
       return;
     }
 
-    entries.push({ name: userName, location: userLocation, sku: lastScannedSKU, quantity: qty });
+    const today = new Date().toISOString().split('T')[0];
+
+    entries.push({ 
+      name: userName, 
+      location: userLocation, 
+      sku: lastScannedSKU, 
+      quantity: qty, 
+      date: today 
+    });
+
     updateTable();
     saveEntries();
     document.getElementById('form-section').classList.add('d-none');
@@ -201,6 +211,7 @@
         <td>${index + 1}</td>
         <td>${item.sku}</td>
         <td>${item.quantity}</td>
+        <td>${item.date}</td>
       </tr>`;
       tableBody.insertAdjacentHTML("beforeend", row);
     });
@@ -232,7 +243,8 @@
       Name: item.name,
       Location: item.location,
       SKU: item.sku,
-      Quantity: item.quantity
+      Quantity: item.quantity,
+      Date: item.date
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(enrichedEntries);
@@ -246,7 +258,6 @@
     const anchor = document.createElement("a");
     anchor.href = url;
 
-    // 📁 Format filename: name_location_YYYY-MM-DD.xlsx
     const today = new Date().toISOString().split('T')[0];
     const safeName = userName.replace(/\s+/g, '_');
     const safeLocation = userLocation.replace(/\s+/g, '_');
@@ -258,5 +269,6 @@
     window.URL.revokeObjectURL(url);
   }
 </script>
+
 </body>
 </html>
